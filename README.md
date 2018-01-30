@@ -120,7 +120,7 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 
 Here are some example images:
 
-Detected bith cars:
+Detected both cars:
 
 ![alt text][image6]
 
@@ -148,7 +148,7 @@ If a smaller search window is added (e.g. 12x12 pixels) we can find the undetect
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result][video1]
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -159,7 +159,7 @@ For the video I am using a slightly more elaborated pipeline as follows:
 
 For the first n (hypermater) images we just add the bounding boxes to an array of "windows". While this array increases we also increase the threshold for the heat map by the length of the array - heat_threshold = per_frame_threshold * len(windows_array).
 
-After we have more than n images, we pop out the first (earliest) bounding boxes and append the the recently find ones at the end.
+After we have more than n frames from the video, we pop out the first (earliest) bounding boxes and append the ones from the current frame at the end.
 
 In this way the output is fairly robust to false positives in the current frame, as they should have also been present in the last n frames.
 
@@ -175,7 +175,7 @@ The result is that in the video we have some false positives, we also have some 
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-First point to consider is lowering the computation times. On one hand a faster machine can be used to speed up the SVM training, so more pictures (e.g. the ones supplied by udacity) can be used for training. Also if we have more data we can use better features without overfitting (e.g. 64x64 car iamges, 16 orientations for HOG).
+First point to consider is lowering the computation times. On one hand a faster machine can be used to speed up the SVM training, so more pictures (e.g. the ones supplied by udacity's dataset) can be used for training. Also if we have more data we can use better features without over-fitting (e.g. 64x64 car images, 16 orientations for HOG).
 
 On the other hand we should speed up the inference process. One way to do that is when processing the video to check just around the bounding boxes found in the last frame and only periodically doing a full check.
 
@@ -185,6 +185,6 @@ Also some cases remain to be seen. For example my detector have difficulties tra
 
 One final point to consider is that the model usually fails when there is some elaborate shadow on the road and it detects cars there. Probably the training "not cars" images are mostly low frequency images, so high frequency images are automatically classified by cars.
 
-Finally I would try how a "modern" deep learning framework would do. Probably it would be superior to hand crafted features and also the training process could be speed up by using GPUs (maybe scikit also can be sped up, though I have no experience there). Also with convolutions the whole image could easily be convolved at the beginning without side effects on the performance of the model, that I experienced using the full image HOG computation.
+Finally I would try how a "modern" deep learning framework would do. Probably it would be superior to hand crafted features and also the training process could be sped up by using GPUs (maybe scikit also can be sped up, though I have no experience there). Also with convolutions the whole image could easily be convolved at the beginning without side effects on the performance of the model, that I experienced using the full image HOG computation.
 
 
