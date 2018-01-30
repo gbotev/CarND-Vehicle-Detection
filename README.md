@@ -53,9 +53,11 @@ Because the initial count of images is a little bit low (around 8000 cars and 80
 Here are some examples.
 
 For a car:
+
 ![alt_text][image3]
 
 For notcar:
+
 ![alt text][image4]
 ![alt text][image5]
 
@@ -119,20 +121,25 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 Here are some example images:
 
 Detected bith cars:
+
 ![alt text][image6]
 
 There are some false positives:
+
 ![alt text][image7]
 
 Also some cars remain undetected:
+
 ![alt text][image8]
 
 Though this could be fixed by tuning the sliding windows parameters. For example:
 
 If the heat threshold is increased the false positives disappear:
+
 ![alt text][image9]
 
 If a smaller search window is added (e.g. 12x12 pixels) we can find the undetected cars:
+
 ![alt text][image10]
 
 ---
