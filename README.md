@@ -92,6 +92,8 @@ Above I have explained how I tuned the parameters for the HOG templates. I have 
 
 Thus I have been using the supplied test images to determine if the parameter is doing a good job or not. Sometimes a model had a 97% score on the test set and failed to find any car on one of the test images, or had 4-5 false positives.
 
+***Edit: After poor performance of the model I have switched back to using 4 pixels per cell. I have also increased orientations from 8 to 9. Furthermore I have used the opencv implementation of HOG leading to around 30-40% speedup.
+
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 The SVM classifier is trained in the sixth cell of the notebook. I am using a feature vector of length 1728 and the train images count is 56832 (80%). The test images are 14208.
@@ -104,6 +106,8 @@ I have explained how I tuned the C parameter in point 1. Unfortunately the long 
 
 Though I find the current model gives satisfactory results.
 
+***Edit: After switching to the more advanced hog features mentioned above resulting in 6156 total features, the model training time has increased considerably to 3797 seconds, although the test accuracy stayed at 0.988.
+
 ### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
@@ -113,6 +117,8 @@ I have used the window search code provided in the lectures. The final parameter
 I have also tried the method with generating a HOG over the whole image and then using those features, but I ran into a problem. Using this method I obtained slightly different windows than using the original window-generating method, although I thought they should be the same. Also it was hard for me to experiment with the overlap values. Finally this method didn't lead to the expected speed ups of 3-4 times when using 50% overlap, ultimately resulting in slightly better (10-15%) performance.
 
 For these reasons and for the simplicity I preferred to use the first window-generator.
+
+***Edit: For better detection I have returned to 0.75 overlap. I have also switched to 4 detection scales - 12, 16, 24, 32 pixels. According to the reviewer's recommendation I have implemented x and y thresholds for each search scale, speeding up the processing time another 40-50% but the processing time per frame is still very high - 15-20 seconds. Ultimately the time for creating the video was around 5 hours, which would be unacceptable in real life situations.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -157,7 +163,7 @@ I have implemented the heat function from the lectures for each frame. The pipel
 
 For the video I am using a slightly more elaborated pipeline as follows:
 
-For the first n (hypermater) images we just add the bounding boxes to an array of "windows". While this array increases we also increase the threshold for the heat map by the length of the array - heat_threshold = per_frame_threshold * len(windows_array).
+For the first n (hyper parameter) images we just add the bounding boxes to an array of "windows". While this array increases we also increase the threshold for the heat map by the length of the array - heat_threshold = per_frame_threshold * len(windows_array).
 
 After we have more than n frames from the video, we pop out the first (earliest) bounding boxes and append the ones from the current frame at the end.
 
